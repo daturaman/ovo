@@ -1,2 +1,4 @@
 #!/usr/bin/python
-print("Your name is {0}".format(input()))
+import json
+x = json.loads(open('prices.json').read())
+print(isinstance(x, dict))
