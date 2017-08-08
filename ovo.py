@@ -1,4 +1,6 @@
 #!/usr/bin/python
 import json
-x = json.loads(open('prices.json').read())
-print(isinstance(x, dict))
+#x = json.loads(open('prices.json').read())
+cmd = input()
+while cmd != 'quit':
+    print('Ovo Energy')

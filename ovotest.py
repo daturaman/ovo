@@ -2,7 +2,7 @@ import unittest
 
 class TestOvo(unittest.TestCase):
 
-    def test_costself):
+    def test_cost(self):
         self.assertEqual('foo'.upper(), 'FOO')
 
     # def test_isupper(self):
