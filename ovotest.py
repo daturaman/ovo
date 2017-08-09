@@ -1,8 +1,9 @@
-import unittest
+import unittest, ovo
 
 class TestOvo(unittest.TestCase):
 
     def test_cost(self):
+        tariff = ovo.Tariff()
         self.assertEqual('foo'.upper(), 'FOO')
 
     # def test_isupper(self):
