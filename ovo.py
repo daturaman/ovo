@@ -28,7 +28,14 @@ class Tariff:
 
     @classmethod
     def usage(cls, tariff, fuel_type, target_monthly_spend):
-        selected_tariff = [t for t in cls.tariffs if t['tariff'] == tariff][0]
+        try:            
+            selected_tariff = [t for t in cls.tariffs if t['tariff'] == tariff][0]            
+        except IndexError:
+            print("{0} is not a recognised tariff.".format(tariff))
+            return 0
+        if fuel_type not in selected_tariff['rates']:
+            print("{0} does not have a rate for {1} fuel type.".format(tariff, fuel_type))
+            return 0
         #Calculate the monthly standing charge + VAT
         gross_standing_charge = selected_tariff['standing_charge'] + (selected_tariff['standing_charge'] * cls.vat)
         #Deduct that from the monthly spend
@@ -38,10 +45,20 @@ class Tariff:
         return round(net_monthly_spend / gross_kwh, 2)
 
 
-tariff = Tariff()
-cmd = input("Please enter command:").split()
+#print(Tariff.usage('better-energy', 'power', 100))
+cmd = input("Please enter command:\n").split()
 while cmd[0] != 'quit':
     if cmd[0] == 'cost':
-        result = tariff.cost(int(cmd[1]), int(cmd[2]))
+        result = Tariff.cost(float(cmd[1]), float(cmd[2]))
         print(result)
-    cmd = input("Please enter command:").split()
+    elif cmd[0] == 'usage':
+        result = Tariff.usage(cmd[1], cmd[2], float(cmd[3]))
+        print(result)#TODO format me
+    else:
+        cmd = input("Command not recognised. Please try again: \n").split()
+        continue
+    cmd = input("Please enter command:\n").split()
+
+
+
+
