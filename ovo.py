@@ -3,7 +3,9 @@ import json
 
 class Tariff:
 
-    tariffs = json.loads(open('prices.json').read()) 
+    tariffs = json.loads(open('prices.json').read())
+    months_in_year = 12
+    vat = 0.05
 
     def __init__(self):
         pass
@@ -14,30 +16,32 @@ class Tariff:
         for tariff in cls.tariffs:
             total = 0
             if 'power' in tariff['rates']:
-                total += power_usage * tariff['rates']['power'] 
+                total += power_usage * tariff['rates']['power']
             if 'gas' in tariff['rates']:
                 total += gas_usage * tariff['rates']['gas']
             #Add standing charge for the year
-            months_in_year = 12
-            total += months_in_year * tariff['standing_charge']
-            #Add VAT   
-            vat = 0.05
-            total += vat * total
+            total += cls.months_in_year * tariff['standing_charge']
+            #Add VAT
+            total += cls.vat * total
             cost_per_tariff.append((tariff['tariff'], round(total, 2)))
         return sorted(cost_per_tariff, key=lambda t: t[1])
 
     @classmethod
     def usage(cls, tariff, fuel_type, target_monthly_spend):
-        #return (((month_spend - standing_charge)*12) - added_vat) / kwh_charge 
-        #kwh_charge = cls.tariffs[tariff]['rates'][fuel_type]
+        selected_tariff = [t for t in cls.tariffs if t['tariff'] == tariff][0]
+        #Calculate the monthly standing charge + VAT
+        gross_standing_charge = selected_tariff['standing_charge'] + (selected_tariff['standing_charge'] * cls.vat)
+        #Deduct that from the monthly spend
+        net_monthly_spend = target_monthly_spend - gross_standing_charge
+        #Calculate the kwh rate + VAT
+        gross_kwh = selected_tariff['rates'][fuel_type] + (selected_tariff['rates'][fuel_type] * cls.vat)
+        return round(net_monthly_spend / gross_kwh, 2)
 
 
-
-
-# cmd = input()
-# while cmd != 'quit':
-#     print('Ovo Energy')
-#Tariff.cost()
-#Tariff.cost(100,2)
-t = Tariff()
-print(t.cost(100,50))
+tariff = Tariff()
+cmd = input("Please enter command:").split()
+while cmd[0] != 'quit':
+    if cmd[0] == 'cost':
+        result = tariff.cost(int(cmd[1]), int(cmd[2]))
+        print(result)
+    cmd = input("Please enter command:").split()
