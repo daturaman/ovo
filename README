@@ -1,0 +1,17 @@
+Requirements:
+  Python3
+
+Before use:
+Extract all contents from ovo.tar.gz. 
+
+To run:
+Locate the file 'ovo.py' in a shell (or pass the full path to python) and type the following:
+  python3 ovo.py cost <POWER_USAGE> <GAS_USAGE>
+
+  or
+
+  python3 ovo.py usage <TARIFF_NAME> <FUEL_TYPE> <TARGET_MONTHLY_SPEND>
+
+After the first command is execute, the program goes into a REPL and will prompt for new commands
+until you type 'quit'. There is some basic error handling in the REPL and the module itself,
+but for brevity's sake I've not covered every possible invalid input or error.
